@@ -1,15 +1,15 @@
-ChargeGrid Assistant — GoodWe EV Challenge 2026
+# ChargeGrid Assistant — GoodWe EV Challenge 2026
 Chatbot inteligente voltado ao suporte operacional de eletropostos comerciais no contexto do EV Challenge 2026 proposto pela GoodWe.
 
 ---
-INTEGRANTES:
+## INTEGRANTES:
 -Pedro Ferreras — RM 568713
 - Pedro Santos — RM 571017
 - Victor Binot — RM 571499
 - Gustavo Kunitaki — RM 571400
 
 ---
-PROBLEMA ABORDADO:
+## PROBLEMA ABORDADO:
 Com o crescimento da mobilidade elétrica, eletropostos comerciais passaram a operar múltiplos carregadores simultaneamente, gerando desafios relacionados à gestão energética e operacional.
 O desafio ChargeGrid Intelligence destaca a ausência de mecanismos integrados capazes de:
 
@@ -18,7 +18,7 @@ O desafio ChargeGrid Intelligence destaca a ausência de mecanismos integrados c
 - Apoiar processos de faturamento
 - Centralizar comunicação operacional
 ---
-PROPOSTA DO CHATBOT:
+## PROPOSTA DO CHATBOT:
 O chatbot permitirá interação em linguagem natural para:
 
 - Consultar status dos carregadores;
@@ -30,12 +30,14 @@ O chatbot permitirá interação em linguagem natural para:
 O objetivo é centralizar informações técnicas e facilitar decisões operacionais em tempo real.
 
 ---
-PERSONA DEFINIDA:
+
+## PERSONA DEFINIDA:
 Operador Comercial de Eletroposto
 Profissional responsável pela operação diária de estações de carregamento em ambientes comerciais, realizando monitoramento dos carregadores, acompanhamento do consumo energético e tomada de decisões para evitar sobrecarga elétrica e garantir eficiência operacional.
+
 ---
 
-TECNOLOGIAS SELECIONADAS E JUSTIFICATIVA TÉCNICA: 
+## TECNOLOGIAS SELECIONADAS E JUSTIFICATIVA TÉCNICA: 
 
 | Tecnologia | Justificativa Técnica |
 |------------|-----------------------|
