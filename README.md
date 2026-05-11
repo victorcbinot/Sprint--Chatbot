@@ -3,7 +3,7 @@ Chatbot inteligente voltado ao suporte operacional de eletropostos comerciais no
 
 ---
 ## INTEGRANTES:
--Pedro Ferreras — RM 568713
+- Pedro Ferreras — RM 568713
 - Pedro Santos — RM 571017
 - Victor Binot — RM 571499
 - Gustavo Kunitaki — RM 571400
