@@ -7,6 +7,8 @@ Chatbot inteligente voltado ao suporte operacional de eletropostos comerciais no
 - Pedro Santos — RM 571017
 - Victor Binot — RM 571499
 - Gustavo Kunitaki — RM 571400
+- Kauanne Oliveira - RM 574191
+- Nayhely Estela - 571416
 
 ---
 ## PROBLEMA ABORDADO:
