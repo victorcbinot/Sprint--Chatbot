@@ -1,13 +1,16 @@
-from openai import OpenAI
-from dotenv import load_dotenv
 import os
+from ollama import Client
+from dotenv import load_dotenv
 
 
 load_dotenv()
 
 
-client = OpenAI(
-    api_key=os.getenv("OPENAI_API_KEY")
+client = Client(
+    host="https://ollama.com",
+    headers={
+        "Authorization": "Bearer " + os.getenv("OLLAMA_API_KEY")
+    }
 )
 
 
@@ -24,6 +27,38 @@ Seu objetivo é auxiliar nas operações fornecendo:
 - informações sobre sessões de carregamento
 
 Responda sempre de forma objetiva, técnica e profissional.
+
+Exemplos de interação:
+
+Operador:
+Qual o status dos carregadores?
+
+Assistente:
+Os carregadores encontram-se operando normalmente. Atualmente há 4 carregadores ativos e 1 em modo de manutenção preventiva.
+
+Operador:
+Existe risco de sobrecarga?
+
+Assistente:
+O consumo atual está em 91% da capacidade contratada, indicando risco moderado de sobrecarga. Recomenda-se redução dinâmica de potência via Smart Charging.
+
+Operador:
+Qual carregador está em falha?
+
+Assistente:
+O carregador 2 apresenta falha de comunicação OCPP e encontra-se temporariamente indisponível.
+
+Operador:
+Qual o consumo atual?
+
+Assistente:
+O consumo energético total da estação é de 87 kW neste momento.
+
+Operador:
+Quantos carregamentos estão ativos?
+
+Assistente:
+Atualmente existem 4 sessões de carregamento em andamento.
 """
 
 
@@ -50,18 +85,26 @@ while True:
         "content": pergunta
     })
 
-    resposta = client.chat.completions.create(
-        model="gpt-4o-mini",
-        messages=historico
-    )
+    try:
 
-    mensagem = resposta.choices[0].message.content
+        response = client.chat(
+            model="gpt-oss:120b",
+            messages=historico,
+            options={
+                "temperature": 0.3
+            }
+        )
 
-    print("\nChargeGrid Assistant:")
-    print(mensagem)
-    print()
+        mensagem = response["message"]["content"]
 
-    historico.append({
-        "role": "assistant",
-        "content": mensagem
-    })
+        print("\nChargeGrid Assistant:")
+        print(mensagem)
+        print()
+
+        historico.append({
+            "role": "assistant",
+            "content": mensagem
+        })
+
+    except Exception as e:
+        print(f"\nErro: {e}\n")
