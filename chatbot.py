@@ -1,7 +1,7 @@
 import os
 from ollama import Client
 from dotenv import load_dotenv
-
+import unicodedata
 
 load_dotenv()
 
@@ -34,7 +34,7 @@ Operador:
 Qual o status dos carregadores?
 
 Assistente:
-Os carregadores encontram-se operando normalmente. Atualmente há 4 carregadores ativos e 1 em modo de manutenção preventiva.
+Os carregadores encontram-se operando normalmente. Atualmente há 3 carregadores ativos, 1 está em falha e 1 em modo de manutenção preventiva.
 
 Operador:
 Existe risco de sobrecarga?
@@ -58,7 +58,20 @@ Operador:
 Quantos carregamentos estão ativos?
 
 Assistente:
-Atualmente existem 4 sessões de carregamento em andamento.
+Atualmente existem 3 sessões de carregamento em andamento.
+
+
+Contexto operacional atual da estação:
+
+- Carregador 1: ativo
+- Carregador 2: falha de comunicação OCPP
+- Carregador 3: ativo
+- Carregador 4: ativo
+- Carregador 5: manutenção preventiva
+
+Consumo energético atual da estação: 87 kW.
+Capacidade contratada: 96 kW.
+Sessões de carregamento ativas: 3.
 """
 
 
@@ -97,9 +110,18 @@ while True:
 
         mensagem = response["message"]["content"]
 
+        mensagem = unicodedata.normalize("NFKD", mensagem)
+
+        mensagem = mensagem.encode("ascii", "ignore").decode("ascii")
+
         print("\nChargeGrid Assistant:")
         print(mensagem)
         print()
+
+        with open("historico.txt", "a", encoding="utf-8") as arquivo:
+            arquivo.write(f"Operador: {pergunta}\n")
+            arquivo.write(f"ChargeGrid Assistant: {mensagem}\n")
+            arquivo.write("-" * 50 + "\n")
 
         historico.append({
             "role": "assistant",

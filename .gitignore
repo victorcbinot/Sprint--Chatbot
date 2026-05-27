@@ -1,0 +1,9 @@
+.env
+
+historico.txt
+
+.venv/
+
+.idea/
+
+__pycache__/
