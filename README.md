@@ -75,6 +75,7 @@ Sprint--Chatbot/
 ├── requirements.txt
 ├── README.md
 ├── .env.example
+├── .gitignore
 │
 ├── docs/
 │   ├── ChargeGrid.draw.io.png
