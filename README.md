@@ -43,7 +43,7 @@ Profissional responsável pela operação diária de estações de carregamento 
 
 | Tecnologia | Justificativa Técnica |
 |------------|-----------------------|
-| OpenAI API | Modelo de linguagem avançado para compreensão e geração de respostas contextualizadas |
+| Ollama Cloud API (gpt-oss:120b) | Modelo de linguagem avançado para compreensão e geração de respostas contextualizadas |
 | Python | Linguagem flexível para integração entre APIs e serviços |
 | OCPP 1.6J / 2.0.1 | Protocolo padrão de comunicação entre carregadores e sistemas de gestão |
 | Smart Meter | Monitoramento contínuo da demanda energética |
