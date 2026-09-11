@@ -63,38 +63,3 @@ class ConsultaRecarga(BaseModel):
                 f"da estação ({CAPACIDADE_CONTRATADA_KW} kW)."
             )
         return valor
-
-
-if __name__ == "__main__":
-
-    # 1) Caso válido
-    consulta_ok = ConsultaRecarga(
-        carregador_id=1,
-        status=StatusCarregador.ATIVO,
-        potencia_kw=17.4,
-        sessoes_ativas=1,
-    )
-    print("Consulta válida:")
-    print(consulta_ok.model_dump_json(indent=2))
-
-    # 2) Caso que deveria FALHAR: status=falha sem observação
-    print("\nTentando criar consulta inválida (falha sem observação)...")
-    try:
-        ConsultaRecarga(
-            carregador_id=2,
-            status=StatusCarregador.FALHA,
-            potencia_kw=0,
-        )
-    except Exception as erro:
-        print("Erro esperado:", erro)
-
-    # 3) Caso que deveria FALHAR: potência acima da capacidade contratada
-    print("\nTentando criar consulta inválida (potência acima da capacidade)...")
-    try:
-        ConsultaRecarga(
-            carregador_id=3,
-            status=StatusCarregador.ATIVO,
-            potencia_kw=150,
-        )
-    except Exception as erro:
-        print("Erro esperado:", erro)

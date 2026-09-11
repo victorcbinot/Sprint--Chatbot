@@ -102,22 +102,3 @@ def validar_escopo(pergunta: str) -> ResultadoValidacaoEscopo:
         tipo_recusa=TipoRecusa.FORA_DE_ESCOPO,
         mensagem=MENSAGENS_RECUSA[TipoRecusa.FORA_DE_ESCOPO],
     )
-
-
-if __name__ == "__main__":
-    perguntas_teste = [
-        "Qual o status do carregador 2?",
-        "Qual a capital da França?",
-        "O carregador pegou fogo, posso processar a GoodWe?",
-        "Vale a pena investir em ações da GoodWe?",
-        "Posso mexer no disjuntor sozinho para resolver a falha?",
-    ]
-
-    for pergunta in perguntas_teste:
-        resultado = validar_escopo(pergunta)
-        print(f"Pergunta: {pergunta}")
-        print(f"  Dentro do escopo: {resultado.dentro_do_escopo}")
-        if not resultado.dentro_do_escopo:
-            print(f"  Tipo de recusa: {resultado.tipo_recusa.value}")
-            print(f"  Mensagem: {resultado.mensagem}")
-        print()
