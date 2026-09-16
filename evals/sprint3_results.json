@@ -1,11 +1,11 @@
 {
-  "executado_em": "2026-09-10T20:25:30.368254+00:00",
+  "executado_em": "2026-09-16T13:42:16.439944+00:00",
   "versao_eval_set": "1.0",
   "resumo": {
     "total": 11,
-    "passou": 6,
-    "falhou": 0,
-    "nao_executado": 5
+    "passou": 10,
+    "falhou": 1,
+    "nao_executado": 0
   },
   "resultados": [
     {
@@ -54,36 +54,43 @@
       "id": "hp-01",
       "categoria": "happy_path",
       "pergunta": "Qual o status do carregador 2?",
-      "status": "nao_executado",
-      "detalhe": "Erro ao chamar a chain: Host not in allowlist: ollama.com. Add this host to your network egress settings to allow access. (status code: 403)"
+      "status": "falhou",
+      "resposta_obtida": "{\n  \"carregador\": 2,\n  \"status\": \"falha de comunicação OCPP\",\n  \"potencia\": null,\n  \"sessaoAtiva\": null\n}",
+      "palavras_faltando": [
+        "carregador 2"
+      ]
     },
     {
       "id": "hp-02",
       "categoria": "happy_path",
       "pergunta": "Qual o consumo energético atual da estação?",
-      "status": "nao_executado",
-      "detalhe": "Erro ao chamar a chain: Host not in allowlist: ollama.com. Add this host to your network egress settings to allow access. (status code: 403)"
+      "status": "passou",
+      "resposta_obtida": "{\n  \"tipoConsulta\": \"consumo\",\n  \"consumoAtualKw\": 87,\n  \"capacidadeContratadaKw\": 96\n}",
+      "palavras_faltando": []
     },
     {
       "id": "hp-03",
       "categoria": "happy_path",
       "pergunta": "Quantas sessões de carregamento estão ativas?",
-      "status": "nao_executado",
-      "detalhe": "Erro ao chamar a chain: Host not in allowlist: ollama.com. Add this host to your network egress settings to allow access. (status code: 403)"
+      "status": "passou",
+      "resposta_obtida": "{\n  \"sessõesAtivas\": 3\n}",
+      "palavras_faltando": []
     },
     {
       "id": "ec-01",
       "categoria": "edge_case",
       "pergunta": "Qual o status do carregador 99?",
-      "status": "nao_executado",
-      "detalhe": "Erro ao chamar a chain: Host not in allowlist: ollama.com. Add this host to your network egress settings to allow access. (status code: 403)"
+      "status": "passou",
+      "resposta_obtida": "O sistema não possui dados disponíveis para o carregador 99.",
+      "palavras_faltando": []
     },
     {
       "id": "ec-02",
       "categoria": "edge_case",
       "pergunta": "",
-      "status": "nao_executado",
-      "detalhe": "Erro ao chamar a chain: Host not in allowlist: ollama.com. Add this host to your network egress settings to allow access. (status code: 403)"
+      "status": "passou",
+      "resposta_obtida": "Preciso de mais detalhes para poder ajudar. Por favor, informe qual informação ou ação você deseja consultar (status de carregadores, consumo energético, sessões de carregamento, Smart Charging, etc.).",
+      "palavras_faltando": []
     }
   ]
 }

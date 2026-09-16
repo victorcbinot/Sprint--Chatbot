@@ -13,11 +13,10 @@ from langchain_core.prompts import ChatPromptTemplate
 
 MODELOS = [
     {"nome": "gpt-oss:120b", "temperature": 0.3, "top_p": 0.9, "max_tokens": 512},
-    {"nome": "qwen3:8b", "temperature": 0.3, "top_p": 0.9, "max_tokens": 512},
+    {"nome": "nemotron-3-nano:30b", "temperature": 0.3, "top_p": 0.9, "max_tokens": 512},
 ]
 
-VERSOES_PROMPT = ["v2"]  # adicione "v1" aqui também se quiser comparar prompts
-
+VERSOES_PROMPT = ["v2"]
 PERGUNTAS_TESTE = [
     "Qual o status do carregador 2?",
     "Qual o consumo energético atual da estação?",
