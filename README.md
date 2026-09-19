@@ -4,6 +4,22 @@ Chatbot inteligente voltado ao suporte operacional de eletropostos comerciais no
 > **Sprint 03 (atual):** o núcleo conversacional foi refatorado para LangChain (LCEL), com memória por sessão, saída estruturada (Pydantic v2) e guardrails de segurança. Ver seção "Sprint 03" abaixo. O `chatbot.py` original (Sprint 2) continua no repositório e funcional, como registro da evolução do projeto.
 
 ---
+## SOBRE AS BRANCHES DESTE REPOSITÓRIO:
+
+Este projeto evolui em branches, uma por sprint, em vez de repositórios separados:
+
+- `main` - planejamento inicial (Sprint 1): problema abordado, proposta, persona, tecnologias selecionadas.
+- `sprint-2` - primeira entrega funcional do chatbot (loop de terminal, Ollama, few-shot).
+- `sprint-3` (esta branch) - refactory do núcleo conversacional para LangChain, construído sobre a `sprint-2`.
+
+Os arquivos e conteúdos das sprints anteriores permanecem propositalmente no
+projeto (não foram removidos ao criar a `sprint-3`) para permitir comparar
+a evolução do projeto ao longo do semestre - por exemplo, o `chatbot.py`
+legado continua funcional lado a lado com a versão nova (`chatbot_lcel.py`),
+e a documentação antiga (`docs/system_prompt.md`, `docs/testes.md`) serve de
+base de comparação para o que foi refeito na Sprint 3.
+
+---
 ## INTEGRANTES:
 - Pedro Ferreras - RM 568713
 - Pedro Santos - RM 571017
@@ -45,7 +61,7 @@ Profissional responsável pela operação diária de estações de carregamento 
 
 | Tecnologia | Justificativa Técnica |
 |------------|-----------------------|
-| Ollama Cloud API (gpt-oss:120b, qwen3:8b) | Modelo de linguagem avançado para compreensão e geração de respostas contextualizadas; comparação entre modelos na Sprint 03 |
+| Ollama Cloud API (gpt-oss:120b, nemotron-3-nano:30b) | Modelo de linguagem avançado para compreensão e geração de respostas contextualizadas; comparação entre modelos na Sprint 3 |
 | LangChain (LCEL) | Framework de orquestração da chain conversacional a partir da Sprint 3: prompt \| llm \| parser, memória por sessão |
 | Pydantic v2 | Validação de saída estruturada do domínio EV (schema `ConsultaRecarga`) |
 | Python | Linguagem flexível para integração entre APIs e serviços |
@@ -75,7 +91,7 @@ Profissional responsável pela operação diária de estações de carregamento 
 - System prompt versionado (v1 legado x v2 com context engineering / XML tagging)
 - Guardrails de segurança: validação de escopo GoodWe e detecção de jailbreak/prompt injection
 - Eval set formal (happy path, edge case, jailbreak, out-of-scope) com execução automatizada
-- Comparação entre modelos (`gpt-oss:120b` x `qwen3:8b`) com parâmetros documentados
+- Comparação entre modelos (`gpt-oss:120b` x `nemotron-3-nano:30b`) com parâmetros documentados
 
 ---
 
