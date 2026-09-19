@@ -14,7 +14,7 @@ Este projeto evolui em branches, uma por sprint, em vez de repositórios separad
 
 Os arquivos e conteúdos das sprints anteriores permanecem propositalmente no
 projeto (não foram removidos ao criar a `sprint-3`) para permitir comparar
-a evolução do projeto ao longo do semestre - por exemplo, o `chatbot.py`
+a evolução do projeto ao longo do ano - por exemplo, o `chatbot.py`
 legado continua funcional lado a lado com a versão nova (`chatbot_lcel.py`),
 e a documentação antiga (`docs/system_prompt.md`, `docs/testes.md`) serve de
 base de comparação para o que foi refeito na Sprint 3.
