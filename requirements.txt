@@ -8,3 +8,10 @@ langchain-community
 langchain-ollama
 pydantic>=2.0
 tiktoken
+
+#Sprint 4
+langchain-text-splitters
+langchain-chroma
+chromadb
+pymupdf
+reportlab
