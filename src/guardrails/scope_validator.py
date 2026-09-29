@@ -21,7 +21,9 @@ PALAVRAS_DOMINIO_EV = [
     "carregador", "carregadores", "recarga", "carga", "eletroposto",
     "estação", "consumo", "potência", "kw", "smart charging",
     "sessão", "sessões", "ocpp", "veículo", "veiculo", "bateria",
-    "falha", "manutenção", "faturamento operacional",
+    "falha", "manutenção", "faturamento operacional", "reserva", "reservar", "reservado", "condomínio", "condominio",
+    "síndico", "sindico", "unidade", "morador", "moradores",
+    "regimento", "tarifa", "tarifário", "tarifaria",
 ]
 
 

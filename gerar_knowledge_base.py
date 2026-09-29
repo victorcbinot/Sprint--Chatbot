@@ -61,9 +61,10 @@ def gerar_manual_produto():
             "Falhas de comunicação OCPP são o tipo de falha mais comum reportado pelos "
             "carregadores ChargeGrid. Quando um carregador perde a comunicação com o "
             "sistema central por mais de 60 segundos, ele é automaticamente marcado como "
-            "'falha de comunicação OCPP' no painel do operador. Recomenda-se verificar a "
-            "conectividade de rede (Wi-Fi ou 4G, dependendo do modelo) e reiniciar o módulo "
-            "de comunicação antes de abrir chamado técnico.",
+            "'falha de comunicação OCPP' no painel do operador. O operador deve verificar "
+            "a conectividade de rede (Wi-Fi ou 4G, dependendo do modelo) e, caso a falha "
+            "persista, abrir chamado técnico -- a reinicialização do módulo de comunicação "
+            "deve ser feita apenas por um técnico habilitado, não pelo operador da estação.",
             corpo
         ),
         Paragraph("5. Manutenção preventiva", h1),
