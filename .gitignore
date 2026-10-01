@@ -7,3 +7,5 @@ historico.txt
 .idea/
 
 __pycache__/
+
+data/chroma_db/
