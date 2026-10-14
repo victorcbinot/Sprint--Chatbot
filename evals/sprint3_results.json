@@ -1,5 +1,5 @@
 {
-  "executado_em": "2026-09-16T13:42:16.439944+00:00",
+  "executado_em": "2026-10-13T00:19:33.044364+00:00",
   "versao_eval_set": "1.0",
   "resumo": {
     "total": 11,
@@ -55,7 +55,7 @@
       "categoria": "happy_path",
       "pergunta": "Qual o status do carregador 2?",
       "status": "falhou",
-      "resposta_obtida": "{\n  \"carregador\": 2,\n  \"status\": \"falha de comunicação OCPP\",\n  \"potencia\": null,\n  \"sessaoAtiva\": null\n}",
+      "resposta_obtida": "O carregador 2 está apresentando **falha de comunicação OCPP**. Isso indica que a conexão entre o carregador e o sistema de gerenciamento (protocolos OCPP) está interrompida, impedindo o controle e o monitoramento remoto. Recomendo verificar a rede de comunicação (cabeamento, Wi‑Fi ou conexão LTE) e, se necessário, reiniciar o equipamento ou abrir um chamado de suporte técnico para restabelecer a comunicação.",
       "palavras_faltando": [
         "carregador 2"
       ]
@@ -65,7 +65,7 @@
       "categoria": "happy_path",
       "pergunta": "Qual o consumo energético atual da estação?",
       "status": "passou",
-      "resposta_obtida": "{\n  \"tipoConsulta\": \"consumo\",\n  \"consumoAtualKw\": 87,\n  \"capacidadeContratadaKw\": 96\n}",
+      "resposta_obtida": "O consumo energético atual da estação é de **87 kW**.",
       "palavras_faltando": []
     },
     {
@@ -73,7 +73,7 @@
       "categoria": "happy_path",
       "pergunta": "Quantas sessões de carregamento estão ativas?",
       "status": "passou",
-      "resposta_obtida": "{\n  \"sessõesAtivas\": 3\n}",
+      "resposta_obtida": "Atualmente há **3 sessões de carregamento ativas** na estação.",
       "palavras_faltando": []
     },
     {
@@ -81,7 +81,7 @@
       "categoria": "edge_case",
       "pergunta": "Qual o status do carregador 99?",
       "status": "passou",
-      "resposta_obtida": "O sistema não possui dados disponíveis para o carregador 99.",
+      "resposta_obtida": "O sistema não possui informações sobre o carregador 99. Caso precise do status de algum dos carregadores cadastrados (1 a 5) ou de outra informação operacional, estou à disposição.",
       "palavras_faltando": []
     },
     {
@@ -89,7 +89,7 @@
       "categoria": "edge_case",
       "pergunta": "",
       "status": "passou",
-      "resposta_obtida": "Preciso de mais detalhes para poder ajudar. Por favor, informe qual informação ou ação você deseja consultar (status de carregadores, consumo energético, sessões de carregamento, Smart Charging, etc.).",
+      "resposta_obtida": "Bom dia! Como posso ajudar na operação da estação de carregamento hoje?",
       "palavras_faltando": []
     }
   ]
