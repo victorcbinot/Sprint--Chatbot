@@ -30,6 +30,13 @@ def carregar_prompt_rag(versao: str = "v1") -> str:
     return caminho.read_text(encoding="utf-8")
 
 
+def pagina_humana(doc: Document):
+    """O PyMuPDF numera páginas a partir de 0; para quem lê a citação,
+    a primeira página é a 1."""
+    pagina = doc.metadata.get("page")
+    return pagina + 1 if isinstance(pagina, int) else "?"
+
+
 def formatar_contexto_com_citacao(documentos: list[Document]) -> str:
     """
     Formata os chunks recuperados em blocos de texto citando a fonte e a
@@ -44,7 +51,7 @@ def formatar_contexto_com_citacao(documentos: list[Document]) -> str:
     blocos = []
     for doc in documentos:
         fonte = Path(doc.metadata.get("source", "desconhecido")).name
-        pagina = doc.metadata.get("page", "?")
+        pagina = pagina_humana(doc)
         blocos.append(f"[Fonte: {fonte}, página {pagina}]\n{doc.page_content}")
 
     return "\n\n---\n\n".join(blocos)

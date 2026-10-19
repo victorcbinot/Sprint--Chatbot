@@ -1,4 +1,4 @@
-#Sprint 2
+    #Sprint 2
 ollama
 python-dotenv
 
@@ -15,3 +15,4 @@ langchain-chroma
 chromadb
 pymupdf
 reportlab
+streamlit
