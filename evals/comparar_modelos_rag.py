@@ -1,4 +1,4 @@
- """
+"""
 Compara 2+ modelos no CONTEXTO RAG (Sprint 04): roda o eval set completo
 (eval_set/rag_eval_set.json) com cada modelo como gerador, mantendo tudo
 o mais constante (prompt v2, k=4, chunking, embeddings, juiz), e salva o
@@ -15,7 +15,6 @@ store indexado (python src/rag/indexar_base_de_conhecimento.py).
 Uso:
     python evals/comparar_modelos_rag.py
 """
-
 import json
 import sys
 import time
