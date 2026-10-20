@@ -174,6 +174,7 @@ def resumir(resultados: list[dict]) -> dict:
     return {
         "casos_total": len(resultados),
         "casos_com_erro": sum(1 for r in resultados if "erro" in r),
+        "juiz_erros": sum(1 for r in resultados if "juiz_erro" in r.get("juiz", {})),
         "faithfulness_media": media([r["juiz"].get("faithfulness") for r in resultados if "juiz" in r]),
         "answer_relevancy_media": media([r["juiz"].get("answer_relevancy") for r in resultados if "juiz" in r]),
         "context_hit_rate": media(coletar("context_hit")),

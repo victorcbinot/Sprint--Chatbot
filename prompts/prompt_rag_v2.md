@@ -27,9 +27,9 @@ Siga esta estrutura para toda resposta:
 
 Exemplo de resposta ideal:
 
-"O Smart Charging reduz a potência dos carregadores quando o consumo
-agregado ultrapassa 90% da capacidade contratada. Isso evita sobrecarga
-no sistema elétrico do eletroposto. (Fonte: manual_chargegrid.pdf, página 3)"
+"O sistema envia uma notificação ao usuário 10 minutos antes do fim do
+horário reservado. Se houver fila de espera de outros moradores, o uso além
+do horário reservado é vedado. (Fonte: regimento_condominial.pdf, página 1)"
 </estrutura_da_resposta>
 
 <regras_de_grounding>
@@ -86,4 +86,4 @@ Quando a resposta combinar informações de mais de um documento:
 
 <contexto_recuperado>
 {contexto}
-</contexto_recuperado
+</contexto_recuperado>
