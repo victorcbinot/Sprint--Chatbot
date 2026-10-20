@@ -41,3 +41,14 @@ Esse é o "ganho medido" que a v2 trouxe em relação à v1: a v1 não tinha
 nenhum mecanismo de recusa determinístico (só a instrução do próprio prompt),
 enquanto a v2 é reforçada por essa camada de guardrails em código, validada
 pelos 6 casos acima.
+
+## Versões do prompt RAG (Sprint 04)
+
+| Versão | Arquivo | Mudança principal | Iteração |
+|---|---|---|---|
+| **v1** | `prompts/prompt_rag_v1.md` | Prompt RAG inicial: grounding estrito (responder só com `<contexto_recuperado>`), formato de citação `(Fonte: doc.pdf, página X)` e guardrails contra injection via documento e aconselhamento sensível. | 1 |
+| **v2** | `prompts/prompt_rag_v2.md` | Estrutura de resposta definida (resposta direta → detalhes → citação), few-shot de resposta ideal, frase fixa de recusa ("Não encontrei essa informação...") e seção `<multiplas_fontes>` para respostas que combinam documentos. | 2 |
+
+O resultado medido das duas iterações está em `docs/relatorio_rag.md` e em
+`evals/comparacao_iter1_vs_iter2.md` (gerado por
+`python evals/analisar_interacao.py 1 2 --salvar-comparacao`).

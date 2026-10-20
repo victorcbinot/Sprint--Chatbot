@@ -335,6 +335,19 @@ def mostrar_comparacao(a: int, b: int, salvar: bool = False) -> None:
         var_str = "-" if variacao is None else f"{variacao:+.3f}"
         print(f"{rotulo:38} {formatar(va):>8} {formatar(vb):>8} {var_str:>10}")
 
+    # Tabela comparativa - SÓ CASOS COM JUIZ VÁLIDO
+    n_a_j = comparacao["iteracoes"][str(a)]["casos_com_juiz"]
+    n_b_j = comparacao["iteracoes"][str(b)]["casos_com_juiz"]
+    print(f"\n--- MÉTRICAS (SÓ CASOS COM JUIZ VÁLIDO: {n_a_j} x {n_b_j}) ---")
+    print(f"{'Métrica':38} {'Iter ' + str(a):>8} {'Iter ' + str(b):>8} {'Variação':>10}")
+    print("-" * 70)
+    for chave, rotulo in METRICAS:
+        va = comparacao["metricas_so_com_juiz"][str(a)].get(chave)
+        vb = comparacao["metricas_so_com_juiz"][str(b)].get(chave)
+        variacao = comparacao["metricas_so_com_juiz"]["variacao"].get(chave)
+        var_str = "-" if variacao is None else f"{variacao:+.3f}"
+        print(f"{rotulo:38} {formatar(va):>8} {formatar(vb):>8} {var_str:>10}")
+
     # Tabela comparativa - SÓ CASOS COMUNS COM JUIZ
     n_comuns = comparacao["metricas_somente_casos_comuns"]["n_casos"]
     print(f"\n--- MÉTRICAS (SÓ {n_comuns} CASOS AVALIADOS EM AMBAS) ---")
@@ -419,6 +432,24 @@ def gerar_markdown(comparacao: dict, a: int, b: int) -> str:
         var_str = "-" if var is None else f"{var:+.3f}"
         linhas.append(f"| {rotulo} | {va_str} | {vb_str} | {var_str} |")
 
+    n_a_j = comparacao["iteracoes"][str(a)]["casos_com_juiz"]
+    n_b_j = comparacao["iteracoes"][str(b)]["casos_com_juiz"]
+    linhas.extend([
+        "",
+        f"## Métricas (Somente Casos com Juiz Válido: {n_a_j} x {n_b_j})",
+        "",
+        "| Métrica | Iteração " + str(a) + " | Iteração " + str(b) + " | Variação |",
+        "|---------|------------|------------|----------|",
+    ])
+    for chave, rotulo in METRICAS:
+        va = comparacao["metricas_so_com_juiz"][str(a)].get(chave)
+        vb = comparacao["metricas_so_com_juiz"][str(b)].get(chave)
+        var = comparacao["metricas_so_com_juiz"]["variacao"].get(chave)
+        va_str = "-" if va is None else f"{va:.3f}"
+        vb_str = "-" if vb is None else f"{vb:.3f}"
+        var_str = "-" if var is None else f"{var:+.3f}"
+        linhas.append(f"| {rotulo} | {va_str} | {vb_str} | {var_str} |")
+
     n_comuns = comparacao["metricas_somente_casos_comuns"]["n_casos"]
     linhas.extend([
         "",
@@ -459,6 +490,16 @@ def gerar_markdown(comparacao: dict, a: int, b: int) -> str:
 
 
 def main():
+    if len(sys.argv) == 1:
+        sys.exit(
+            "Este script roda a partir do terminal e precisa de argumentos.\n"
+            "  Diagnóstico de uma iteração:\n"
+            "    python evals/analisar_interacao.py 1\n"
+            "    python evals/analisar_interacao.py 1 --gravar\n"
+            "  Comparação entre duas iterações:\n"
+            "    python evals/analisar_interacao.py 1 2\n"
+            "    python evals/analisar_interacao.py 1 2 --salvar-comparacao"
+        )
     parser = argparse.ArgumentParser(description="Analisa iterações do eval do RAG")
     parser.add_argument("iteracoes", type=int, nargs="+", help="uma iteração (diagnóstico) ou duas (comparação)")
     parser.add_argument("--gravar", action="store_true", help="grava métricas recalculadas (modo diagnóstico)")
