@@ -38,7 +38,13 @@ recuperado.
 | 0.0 | Resposta inventada ou contradiz o contexto |
 
 Em casos em que a resposta correta é recusar/informar que não há dado:
-1.0 se não inventou nada, 0.0 se inventou informação.
+1.0 se não inventou nada substantivo, 0.0 se inventou informação. A frase
+fixa de recusa definida pelo sistema (ex.: "Sou especializado em
+eletropostos...", "Não encontrei essa informação na base...") e frases
+educativas do próprio assistente NÃO contam como afirmações substantivas —
+não são penalizadas, para não punir a recusa correta (artefato observado
+quando o juiz pontuou a frase de recusa como afirmação "não suportada pelo
+contexto").
 
 ### Answer relevancy (relevância da resposta)
 Mede se a resposta realmente responde ao que foi perguntado.

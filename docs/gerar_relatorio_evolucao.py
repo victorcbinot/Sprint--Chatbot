@@ -199,6 +199,18 @@ story = [
         "métricas do set difícil em 1.0. O experimento também exigiu "
         "canonizar separadores de milhar no medidor ('5.000' = '5 000').", corpo),
 
+    Paragraph("5.6 Juiz penalizando a frase de recusa", h2),
+    Paragraph(
+        "Re-medindo a iteração 2 com o prompt v2 final, o avaliador "
+        "(LLM-as-judge) pontuou 0.0 o caso de fora-do-contexto porque a frase "
+        "fixa de recusa ('Sou especializado em eletropostos...') 'não está no "
+        "contexto' — mesmo texto que recebeu 1.0 na rodada anterior (juiz "
+        "instável nesses casos; artefato já documentado com o nemotron). "
+        "Correção: critério explícito na rubrica e no prompt do juiz — frases "
+        "de recusa definidas pelo sistema não contam como afirmações "
+        "substantivas. Re-medição final: todas as métricas em 1.0 e 0 erros "
+        "do juiz nas duas iterações.", corpo),
+
     Paragraph("6. Comparação entre modelos no contexto RAG", h1),
     Paragraph(
         "Os mesmos 19 casos, mesmo prompt v2, mesmo retrieval (k=4) e mesmo "

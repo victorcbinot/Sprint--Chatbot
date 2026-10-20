@@ -1,5 +1,5 @@
 {
-  "data_analise": "2026-10-20T20:17:37.993008+00:00",
+  "data_analise": "2026-10-20T23:03:22.341011+00:00",
   "iteracoes": {
     "1": {
       "arquivo": "C:\\Users\\Pichau\\PycharmProjects\\Sprint--Chatbot\\evals\\rag_results_iter1.json",
@@ -29,7 +29,7 @@
         "modelo": "gpt-oss:120b",
         "temperature": 0,
         "embedding": "nomic-embed-text",
-        "metricas_recalculadas": true
+        "eval_set": "rag_eval_set.json"
       },
       "total_casos": 19,
       "casos_com_juiz": 19,

@@ -62,6 +62,12 @@ Configuração constante: `k=4`, `chunk_size=500`, `gpt-oss:120b`,
 Comparação detalhada caso a caso: `evals/comparacao_iter1_vs_iter2.md`
 (gerada por `python evals/analisar_interacao.py 1 2 --salvar-comparacao`).
 
+Nota de rastreabilidade: os números das colunas "índice corrigido" foram
+re-medidos com o `prompt_rag_v2.md` **final** (com a proteção contra
+injection) e o juiz atualizado (problema 5) — resultados idênticos ao
+anterior, o que reforça que os artifacts oficiais correspondem ao prompt
+entregue.
+
 ## 5. Problemas encontrados e soluções
 
 ### Problema 1 — Vector store com chunks duplicados (o mais grave)
@@ -125,6 +131,27 @@ normalizava.
 **Solução:** `normalizar()` em `evals/run_rag_evals.py` agora também remove
 caracteres invisíveis (U+200B–U+200F, U+2060, U+FEFF, U+00AD) antes de
 comparar. Recalculado sem nova chamada ao modelo: `citation_rate` → 1.000.
+
+### Problema 5 — Juiz penalizando a frase fixa de recusa
+
+**Sintoma:** re-medindo a iteração 2 com o `prompt_rag_v2.md` final (após o
+reforço de segurança), o juiz deu faithfulness 0.0 no caso o-01 com a
+justificativa "afirmação de especialização não está no contexto" — derrubando
+a média do juiz de 1.000 para 0.947. É o mesmo artefato já observado e
+documentado na comparação de modelos (daí a nota no
+`docs/relatorio_modelos.md`), agora ocorrendo também com o `gpt-oss:120b`.
+
+**Diagnóstico:** o juiz tratou a frase fixa de recusa ("Sou especializado em
+eletropostos...", definida no próprio prompt) como afirmação factual que
+deveria estar no contexto. Reforço: o mesmo texto recebeu 1.0 na rodada
+anterior — o juiz decide de forma instável nesses casos.
+
+**Solução:** rubrica e prompt do juiz atualizados
+(`evals/rubrica_rag.md`, `evals/judge_prompt_rag.md`): afirmações sobre a
+especialização do assistente e frases educativas de recusa não contam como
+afirmações substantivas. Com o critério explícito, a iteração 2 foi re-medida
+com o prompt v2 final: **todas as métricas 1.000, 0 erros de juiz**; a
+comparação 1×2 foi regenerada e segue empatada no teto.
 
 ## 6. Conclusão e limitações
 

@@ -1,6 +1,6 @@
 # Comparação de Iterações RAG: 1 × 2
 
-Gerado em: 2026-10-20T20:17:37.993008+00:00
+Gerado em: 2026-10-20T23:03:22.341011+00:00
 
 ## Configurações
 
