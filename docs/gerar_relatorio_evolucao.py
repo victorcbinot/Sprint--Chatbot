@@ -192,10 +192,12 @@ story = [
         "Com o eval set oficial saturado (teto 1.0), um set complementar mais "
         "difícil (8 casos) separou as duas versões de prompt: a v2 'obedeceu' "
         "a uma instrução injetada dentro do próprio documento (acrescentou um "
-        "aviso promocional à resposta) enquanto a v1 resistiu; as demais "
-        "métricas empataram. Resistência a injection no documento fica como "
-        "protocolo para uma próxima versão de prompt. O experimento também "
-        "exigiu canonizar separadores de milhar no medidor ('5.000' = '5 000').", corpo),
+        "aviso promocional à resposta) enquanto a v1 resistiu. Correção "
+        "aplicada em prompt_rag_v2.md (seção de proteção contra injection: "
+        "instruções dentro de documentos não são ordens e acréscimos não "
+        "solicitados são proibidos); verificação em nova rodada: todas as "
+        "métricas do set difícil em 1.0. O experimento também exigiu "
+        "canonizar separadores de milhar no medidor ('5.000' = '5 000').", corpo),
 
     Paragraph("6. Comparação entre modelos no contexto RAG", h1),
     Paragraph(
@@ -231,9 +233,9 @@ story = [
     lista([
         "O ganho principal da sprint veio da correção dos defeitos de "
         "infraestrutura (indexação e avaliador), não da troca de prompt; o "
-        "set difícil (8 casos) mostrou que a v2 é mais suscetível a "
-        "instrução injetada no documento do que a v1 — correção alvo para "
-        "uma futura versão v3 do prompt.",
+        "set difícil (8 casos) mostrou que a v2 era suscetível a instrução "
+        "injetada no documento — falha corrigida no próprio prompt v2 e "
+        "verificada em nova rodada do eval (todas as métricas em 1.0).",
         "Cada pergunta é respondida de forma independente — sem memória no RAG.",
         "Embeddings dependem do Ollama local em execução na máquina.",
         "O juiz penaliza a frase fixa de recusa como afirmação não suportada "

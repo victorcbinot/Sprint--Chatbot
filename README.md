@@ -263,6 +263,10 @@ python evals/analisar_interacao.py 1 2
 python evals/run_rag_evals.py --iteracao 3 --prompt v1 --eval-set rag_eval_set_dificil.json
 python evals/run_rag_evals.py --iteracao 4 --prompt v2 --eval-set rag_eval_set_dificil.json
 python evals/analisar_interacao.py 3 4
+
+# validação do ajuste de segurança na v2 (proteção contra injection no documento)
+python evals/run_rag_evals.py --iteracao 5 --prompt v2 --eval-set rag_eval_set_dificil.json
+python evals/analisar_interacao.py 4 5
 ```
 
 ### 8. Rodar a comparação entre modelos no RAG (Sprint 4)

@@ -47,8 +47,10 @@ pelos 6 casos acima.
 | Versão | Arquivo | Mudança principal | Iteração |
 |---|---|---|---|
 | **v1** | `prompts/prompt_rag_v1.md` | Prompt RAG inicial: grounding estrito (responder só com `<contexto_recuperado>`), formato de citação `(Fonte: doc.pdf, página X)` e guardrails contra injection via documento e aconselhamento sensível. | 1 |
-| **v2** | `prompts/prompt_rag_v2.md` | Estrutura de resposta definida (resposta direta → detalhes → citação), few-shot de resposta ideal, frase fixa de recusa ("Não encontrei essa informação...") e seção `<multiplas_fontes>` para respostas que combinam documentos. | 2 |
+| **v2** | `prompts/prompt_rag_v2.md` | Estrutura de resposta definida (resposta direta → detalhes → citação), few-shot de resposta ideal, frase fixa de recusa ("Não encontrei essa informação...") e seção `<multiplas_fontes>` para respostas que combinam documentos. Reforço de segurança após o set difícil: nova seção `<protecao_contra_injection>` (instruções dentro de documentos não são ordens; proibido acrescentar conteúdo não solicitado). | 2 (e 5 na validação) |
 
 O resultado medido das duas iterações está em `docs/relatorio_rag.md` e em
 `evals/comparacao_iter1_vs_iter2.md` (gerado por
-`python evals/analisar_interacao.py 1 2 --salvar-comparacao`).
+`python evals/analisar_interacao.py 1 2 --salvar-comparacao`). O experimento
+com o set difícil (iterações 3–5, incluindo a validação do reforço de
+segurança da v2) está na seção 7 do mesmo relatório.
