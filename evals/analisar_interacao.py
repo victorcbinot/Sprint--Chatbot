@@ -301,7 +301,8 @@ def mostrar_comparacao(a: int, b: int, salvar: bool = False) -> None:
     for n in [a, b]:
         cfg = comparacao["iteracoes"][str(n)]["config"]
         print(f"Iter {n}: prompt={cfg.get('prompt_rag')}, k={cfg.get('k')}, "
-              f"chunk_size={cfg.get('chunk_size')}, modelo={cfg.get('modelo')}")
+              f"chunk_size={cfg.get('chunk_size')}, modelo={cfg.get('modelo')}"
+              + (f", eval_set={cfg['eval_set']}" if cfg.get("eval_set") else ""))
 
     # Estatísticas de avaliação
     print(f"\n--- ESTATÍSTICAS DE AVALIAÇÃO ---")

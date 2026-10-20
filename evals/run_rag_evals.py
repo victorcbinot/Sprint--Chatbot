@@ -17,6 +17,7 @@ Uso:
     python evals/run_rag_evals.py --iteracao 1 --prompt v1 --k 4
     python evals/run_rag_evals.py --iteracao 2 --prompt v2 --k 4
     python evals/run_rag_evals.py --iteracao 1 --sem-juiz   # só métricas determinísticas
+    python evals/run_rag_evals.py --iteracao 3 --prompt v1 --eval-set rag_eval_set_dificil.json
 """
 
 import argparse
@@ -40,8 +41,8 @@ from rag.retriever import buscar_contexto
 
 # ---------------------------------------------------------------- utilidades
 
-def carregar_eval_set() -> dict:
-    return json.loads((PASTA_EVALS / "rag_eval_set.json").read_text(encoding="utf-8"))
+def carregar_eval_set(nome: str = "rag_eval_set.json") -> dict:
+    return json.loads((PASTA_EVALS / nome).read_text(encoding="utf-8"))
 
 
 def carregar_prompt_juiz() -> str:
@@ -67,11 +68,15 @@ def normalizar(texto: str) -> str:
     Também remove caracteres invisíveis de formatação (zero-width space U+200B,
     BOM U+FEFF, soft hyphen U+00AD) que aparecem no meio de palavras -- ex.:
     "F{U+200B}onte:" não casava com a checagem de citação.
+    Por fim, canoniza separadores de milhar: "5.000", "5 000" e "5000" passam a
+    ser equivalentes (o modelo redesenha "R$ 5.000" como "5 000" com espaço
+    fino, e a checagem de fatos era quebrada pela formatação).
     """
     texto = unicodedata.normalize("NFKC", texto)
     texto = re.sub(r"[\u2010-\u2015\u2212]", "-", texto)
     texto = re.sub(r"[\u200b-\u200f\u2060\ufeff\u00ad]", "", texto)
     texto = re.sub(r"\s+", " ", texto)
+    texto = re.sub(r"(?<=\d)[.\s](?=\d{3}(?!\d))", "", texto)
     return texto.lower().strip()
 
 def calcular_metricas_deterministicas(caso: dict, resposta: str, fontes_recuperadas: list[str]) -> dict:
@@ -226,8 +231,9 @@ def resumir(resultados: list[dict]) -> dict:
 
 # --------------------------------------------------------------------- main
 
-def rodar(iteracao, versao_prompt, k, usar_juiz, vector_store, llm_resposta, llm_juiz, config_extra=None):
-    eval_set = carregar_eval_set()
+def rodar(iteracao, versao_prompt, k, usar_juiz, vector_store, llm_resposta, llm_juiz,
+          config_extra=None, nome_eval_set="rag_eval_set.json"):
+    eval_set = carregar_eval_set(nome_eval_set)
     template_juiz = carregar_prompt_juiz()
     chain_rag = construir_chain_rag(llm_resposta, versao_prompt=versao_prompt)
 
@@ -263,6 +269,8 @@ def main():
     parser.add_argument("--prompt", default="v1", help="versão do prompt RAG (v1, v2, ...)")
     parser.add_argument("--k", type=int, default=4, help="chunks recuperados por pergunta")
     parser.add_argument("--sem-juiz", action="store_true", help="não chama o LLM avaliador")
+    parser.add_argument("--eval-set", default="rag_eval_set.json",
+                        help="arquivo do eval set dentro de evals/ (padrão: rag_eval_set.json)")
     args = parser.parse_args()
 
     from chain.builder import criar_llm
@@ -274,12 +282,14 @@ def main():
     llm_resposta = criar_llm(temperature=0)
     llm_juiz = criar_llm(temperature=0, max_tokens=1500)
 
-    print(f"Iteração {args.iteracao} | prompt {args.prompt} | k={args.k}")
+    print(f"Iteração {args.iteracao} | prompt {args.prompt} | k={args.k} | eval set: {args.eval_set}")
     saida = rodar(
         args.iteracao, args.prompt, args.k, not args.sem_juiz,
         vector_store, llm_resposta, llm_juiz,
         config_extra={"chunk_size": CHUNK_SIZE, "chunk_overlap": CHUNK_OVERLAP,
-                      "modelo": "gpt-oss:120b", "temperature": 0, "embedding": "nomic-embed-text"},
+                      "modelo": "gpt-oss:120b", "temperature": 0, "embedding": "nomic-embed-text",
+                      "eval_set": args.eval_set},
+        nome_eval_set=args.eval_set,
     )
 
     caminho = PASTA_EVALS / f"rag_results_iter{args.iteracao}.json"
