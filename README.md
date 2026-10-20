@@ -256,8 +256,13 @@ python evals/run_rag_evals.py --iteracao 1 --prompt v1 --k 4
 # iteração 2 (prompt v2)
 python evals/run_rag_evals.py --iteracao 2 --prompt v2 --k 4
 
-# comparação qualitativa de uma pergunta entre interações
+# comparação entre interações (tabela de métricas + diagnóstico por caso)
 python evals/analisar_interacao.py 1 2
+
+# experimento: set difícil de eval (diferencia as versões de prompt)
+python evals/run_rag_evals.py --iteracao 3 --prompt v1 --eval-set rag_eval_set_dificil.json
+python evals/run_rag_evals.py --iteracao 4 --prompt v2 --eval-set rag_eval_set_dificil.json
+python evals/analisar_interacao.py 3 4
 ```
 
 ### 8. Rodar a comparação entre modelos no RAG (Sprint 4)

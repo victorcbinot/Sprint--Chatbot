@@ -222,22 +222,10 @@ story = [
         "também foi a melhor escolha: cerca de 4.4x mais rápido e mais "
         "conciso que o nemotron, com igual segurança contra jailbreak.", corpo),
 
-    Paragraph("7. Equipe e divisão de trabalho", h1),
-    tabela([
-        ["Integrante", "Responsabilidades na Sprint 04"],
-        ["Pedro Ferreras (RM 568713)",
-         "— (completar pela equipe antes da entrega) —"],
-        ["Pedro Santos (RM 571017)",
-         "— (completar pela equipe antes da entrega) —"],
-        ["Victor Binot (RM 571499)",
-         "— (completar pela equipe antes da entrega) —"],
-        ["Gustavo Kunitaki (RM 571400)",
-         "— (completar pela equipe antes da entrega) —"],
-        ["Kauanne Oliveira (RM 574191)",
-         "— (completar pela equipe antes da entrega) —"],
-        ["Nayhely Estela (RM 571416)",
-         "— (completar pela equipe antes da entrega) —"],
-    ], [5.4*cm, 10.6*cm]),
+    Paragraph("7. Equipe", h1),
+    Paragraph(f"Pedro Ferreras (RM 568713) · Pedro Santos (RM 571017) · "
+              "Victor Binot (RM 571499) · Gustavo Kunitaki (RM 571400) · "
+              "Kauanne Oliveira (RM 574191) · Nayhely Estela (RM 571416)", corpo),
 
     Paragraph("8. Limitações e próximos passos", h1),
     lista([
