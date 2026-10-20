@@ -44,7 +44,7 @@
       "pergunta": "Por quanto tempo posso reservar um carregador de uso compartilhado?",
       "resposta_esperada": "Até 4 horas consecutivas.",
       "fatos_chave": ["4 horas"],
-      "fonte_esperada": ["regimento_condominial.pdf"],
+      "fonte_esperada": ["regimento_condominial.pdf", "faq_carregamento.pdf"],
       "deve_recusar": false
     },
     {

@@ -64,9 +64,13 @@ def normalizar(texto: str) -> str:
     Normaliza o texto antes de comparar: o gpt-oss costuma escrever espaços e
     hífens "especiais" (U+202F, U+00A0, U+2011) que parecem iguais aos normais
     mas quebram a comparação de strings (ex.: "carregador 2" não era achado).
+    Também remove caracteres invisíveis de formatação (zero-width space U+200B,
+    BOM U+FEFF, soft hyphen U+00AD) que aparecem no meio de palavras -- ex.:
+    "F{U+200B}onte:" não casava com a checagem de citação.
     """
     texto = unicodedata.normalize("NFKC", texto)
     texto = re.sub(r"[\u2010-\u2015\u2212]", "-", texto)
+    texto = re.sub(r"[\u200b-\u200f\u2060\ufeff\u00ad]", "", texto)
     texto = re.sub(r"\s+", " ", texto)
     return texto.lower().strip()
 
@@ -100,6 +104,28 @@ def calcular_metricas_deterministicas(caso: dict, resposta: str, fontes_recupera
 
 # ------------------------------------------------------------ avaliador (LLM)
 
+def _extrair_json_do_juiz(bruto: str) -> dict:
+    """Extrai o objeto JSON das notas, tolerando texto/código em volta e
+    respostas truncadas (o modelo avaliador às vezes divaga antes do JSON)."""
+    if not bruto:
+        raise ValueError("resposta vazia do avaliador")
+
+    candidatos = []
+    for inicio in [i for i, c in enumerate(bruto) if c == "{"]:
+        for fim in [i for i, c in enumerate(bruto) if c == "}" and i > inicio]:
+            candidatos.append(bruto[inicio:fim + 1])
+
+    for candidato in sorted(candidatos, key=len, reverse=True):
+        try:
+            dados = json.loads(candidato)
+        except json.JSONDecodeError:
+            continue
+        if "faithfulness" in dados and "answer_relevancy" in dados:
+            return dados
+
+    raise ValueError("nenhum JSON válido com as notas foi encontrado")
+
+
 def avaliar_com_juiz(llm_juiz, template_juiz: str, caso: dict, contexto: str, resposta: str) -> dict:
     prompt = (
         template_juiz
@@ -109,19 +135,31 @@ def avaliar_com_juiz(llm_juiz, template_juiz: str, caso: dict, contexto: str, re
         .replace("<<RESPOSTA_ESPERADA>>", caso["resposta_esperada"])
         .replace("<<DEVE_RECUSAR>>", "SIM" if caso.get("deve_recusar") else "NÃO")
     )
-    bruto = texto_da_resposta(llm_juiz.invoke(prompt))
 
-    try:
-        inicio, fim = bruto.index("{"), bruto.rindex("}") + 1
-        dados = json.loads(bruto[inicio:fim])
-        return {
-            "faithfulness": float(dados["faithfulness"]),
-            "answer_relevancy": float(dados["answer_relevancy"]),
-            "recusou": bool(dados.get("recusou", False)),
-            "justificativa": str(dados.get("justificativa", "")),
-        }
-    except Exception as erro:
-        return {"juiz_erro": f"{erro}", "juiz_resposta_bruta": bruto[:300]}
+    ultimo_bruto = ""
+    ultimo_erro = None
+    # Duas tentativas: a segunda só acontece se o avaliador não devolver JSON
+    # válido (resposta truncada/vazia), para não perder o caso.
+    for tentativa in range(2):
+        ultimo_bruto = texto_da_resposta(llm_juiz.invoke(prompt)) or ""
+        try:
+            dados = _extrair_json_do_juiz(ultimo_bruto)
+            return {
+                "faithfulness": float(dados["faithfulness"]),
+                "answer_relevancy": float(dados["answer_relevancy"]),
+                "recusou": bool(dados.get("recusou", False)),
+                "justificativa": str(dados.get("justificativa", "")),
+            }
+        except Exception as erro:
+            ultimo_erro = erro
+            if tentativa == 0:
+                prompt += (
+                    "\n\nSua resposta anterior foi inválida ou truncada. Responda agora "
+                    "SOMENTE com o objeto JSON completo, sem texto antes ou depois e sem "
+                    "bloco de código."
+                )
+
+    return {"juiz_erro": f"{ultimo_erro}", "juiz_resposta_bruta": ultimo_bruto[:300]}
 
 
 # ------------------------------------------------------------------- um caso
@@ -211,6 +249,15 @@ def rodar(iteracao, versao_prompt, k, usar_juiz, vector_store, llm_resposta, llm
 
 
 def main():
+    if len(sys.argv) == 1:
+        sys.exit(
+            "Este script roda a partir do terminal e precisa de argumentos.\n"
+            "  Rode o eval da iteração (grava em evals/rag_results_iter<N>.json):\n"
+            "    python evals/run_rag_evals.py --iteracao 1 --prompt v1 --k 4\n"
+            "    python evals/run_rag_evals.py --iteracao 2 --prompt v2 --k 4\n"
+            "  Sem o avaliador (só métricas determinísticas):\n"
+            "    python evals/run_rag_evals.py --iteracao 1 --sem-juiz"
+        )
     parser = argparse.ArgumentParser(description="Roda o eval set do RAG")
     parser.add_argument("--iteracao", type=int, required=True)
     parser.add_argument("--prompt", default="v1", help="versão do prompt RAG (v1, v2, ...)")
@@ -225,7 +272,7 @@ def main():
 
     vector_store = carregar_vector_store(criar_embeddings())
     llm_resposta = criar_llm(temperature=0)
-    llm_juiz = criar_llm(temperature=0, max_tokens=600)
+    llm_juiz = criar_llm(temperature=0, max_tokens=1500)
 
     print(f"Iteração {args.iteracao} | prompt {args.prompt} | k={args.k}")
     saida = rodar(
