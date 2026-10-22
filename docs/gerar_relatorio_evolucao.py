@@ -27,6 +27,10 @@ h2 = ParagraphStyle("H2", parent=styles["Heading2"], fontSize=10,
 corpo = ParagraphStyle("C", parent=styles["Normal"], fontSize=9.5, leading=13,
                        spaceAfter=5)
 item = ParagraphStyle("I", parent=corpo, spaceAfter=2)
+celula = ParagraphStyle("Cell", parent=corpo, fontSize=8, leading=10.5,
+                        spaceAfter=0)
+celula_header = ParagraphStyle("CellH", parent=celula, fontName="Helvetica-Bold",
+                               textColor=colors.white)
 
 estilo_tabela = TableStyle([
     ("BACKGROUND", (0, 0), (-1, 0), colors.HexColor("#2c3e50")),
@@ -40,7 +44,13 @@ estilo_tabela = TableStyle([
 
 
 def tabela(dados, larguras):
-    t = Table(dados, colWidths=larguras, repeatRows=1)
+    # Células viram Paragraph para o texto quebrar dentro da célula
+    # (strings puras não fazem wrap e extravasam a tabela).
+    linhas = []
+    for i, linha in enumerate(dados):
+        estilo = celula_header if i == 0 else celula
+        linhas.append([Paragraph(str(c), estilo) for c in linha])
+    t = Table(linhas, colWidths=larguras, repeatRows=1)
     t.setStyle(estilo_tabela)
     return t
 
@@ -78,7 +88,7 @@ story = [
         "saída estruturada em Pydantic v2 e guardrails de segurança "
         "(validação de escopo + detecção de jailbreak/prompt injection).",
         "<b>Sprint 4 — RAG + interface:</b> busca semântica (RAG) sobre base "
-        "de conhecimento oficial em PDFs, com ChromaDB persistente, embeddings "
+        "de conhecimento simulada em PDFs, com ChromaDB persistente, embeddings "
         "locais, citação de fonte (documento + página), interface Streamlit e "
         "avaliação formal com 19 casos + LLM-as-judge.",
     ]),
@@ -87,7 +97,7 @@ story = [
     tabela([
         ["Etapa", "Implementação", "Decisão principal"],
         ["Base de conhecimento",
-         "4 PDFs oficiais (manual, regimento, FAQ e tabela tarifária)",
+         "4 PDFs simulados (manual, regimento, FAQ e tabela tarifária)",
          "Documentos curtos e densos, mantendo consistência com os dados "
          "simulados desde a Sprint 2"],
         ["Loader", "PyMuPDFLoader, 1 documento por página",
@@ -122,27 +132,41 @@ story = [
         "max_tokens=1500. Resultados e comparações geradas por "
         "evals/run_rag_evals.py e evals/analisar_interacao.py.", corpo),
 
-    Paragraph("4. Tabela antes/depois (evolução medida na sprint)", h1),
+    Paragraph("4. Tabela antes/depois (Sprints 1/2 × Sprint 04)", h1),
     Paragraph(
-        "Configuração constante (k=4, chunk 500/50, gpt-oss:120b, "
-        "nomic-embed-text). A variável declarada entre iterações é o prompt "
-        "RAG (v1 → v2); a execução revelou, porém, um defeito no índice "
-        "(chunks duplicados) que contaminava as medições — por isso a tabela "
-        "mostra quatro colunas: as medidas originais com o índice defeituoso "
-        "e as re-medidas após a correção.", corpo),
+        "Configuração constante nas iterações da Sprint 04 (k=4, chunk "
+        "500/50, gpt-oss:120b, nomic-embed-text). A variável declarada entre "
+        "iterações é o prompt RAG (v1 → v2); a execução revelou, porém, um "
+        "defeito no índice (chunks duplicados) que contaminava as medições — "
+        "por isso a tabela mostra as medidas originais com o índice "
+        "defeituoso e as re-medidas após a correção, com o medidor e o juiz "
+        "idênticos nos dois lados (a iteração 1 foi reexecutada com o juiz "
+        "atualizado). Na versão original (Sprints 1/2) não há RAG: o contexto "
+        "operacional é fixo no system prompt, sem base citável — por isso as "
+        "métricas de RAG não se aplicam (n/a).", corpo),
     tabela([
-        ["Métrica", "Iter 1 (índice defeituoso)", "Iter 2 (índice defeituoso)",
+        ["Métrica", "Sprints 1/2 (versão original, sem RAG)",
+         "Iter 1 (índice defeituoso)", "Iter 2 (índice defeituoso)",
          "Iter 1 (índice corrigido)", "Iter 2 (índice corrigido)"],
-        ["Faithfulness (média)", "1.000", "0.875", "1.000", "1.000"],
-        ["Answer relevancy (média)", "0.944", "0.875", "1.000", "1.000"],
-        ["Chunk da fonte certa recuperado", "0.923", "0.923", "1.000", "1.000"],
-        ["Resposta com citação", "0.933", "0.800", "1.000", "1.000"],
-        ["Fonte correta citada", "0.867", "0.800", "1.000", "1.000"],
-        ["Fatos-chave presentes", "0.833", "0.800", "1.000", "1.000"],
-        ["Injection resistido", "1.000", "1.000", "1.000", "1.000"],
-        ["Recusa correta", "0.944", "0.875", "1.000", "1.000"],
-        ["Erros do juiz (de 19)", "1", "3", "0", "0"],
-    ], [4.6*cm, 3.4*cm, 3.4*cm, 2.4*cm, 2.4*cm]),
+        ["Faithfulness (média)", "n/a — responde livre, sem grounding, a "
+         "partir de contexto fixo no prompt", "1.000", "0.875", "1.000", "1.000"],
+        ["Answer relevancy (média)", "n/a (sem eval formal da Sprint 2)",
+         "0.944", "0.875", "1.000", "1.000"],
+        ["Chunk da fonte certa recuperado", "não existe (sem retrieval)",
+         "0.923", "0.923", "1.000", "1.000"],
+        ["Resposta com citação", "não existe (sem citação de fonte)",
+         "0.933", "0.800", "1.000", "1.000"],
+        ["Fonte correta citada", "não existe (sem base citável)",
+         "0.867", "0.800", "1.000", "1.000"],
+        ["Fatos-chave presentes", "n/a — depende do contexto operacional "
+         "fixo simulado no prompt", "0.833", "0.800", "1.000", "1.000"],
+        ["Injection resistido", "não medido — sem guardrails na Sprint 2 "
+         "(chegam na Sprint 3)", "1.000", "1.000", "1.000", "1.000"],
+        ["Recusa correta", "não medida — recusa implícita no few-shot",
+         "0.944", "0.875", "1.000", "1.000"],
+        ["Erros do juiz (de 19)", "sem juiz (avaliação manual)",
+         "1", "3", "0", "0"],
+    ], [3.4*cm, 3.0*cm, 2.65*cm, 2.65*cm, 2.25*cm, 2.25*cm]),
 
     Paragraph("5. Problemas encontrados e soluções", h1),
 
@@ -250,9 +274,14 @@ story = [
         "verificada em nova rodada do eval (todas as métricas em 1.0).",
         "Cada pergunta é respondida de forma independente — sem memória no RAG.",
         "Embeddings dependem do Ollama local em execução na máquina.",
-        "O juiz penaliza a frase fixa de recusa como afirmação não suportada "
-        "(visto no caso o-01 com o nemotron) — mitigável com critério de "
-        "recusa na rubrica do avaliador.",
+        "O juiz penalizava a frase fixa de recusa como afirmação não "
+        "suportada (problema 5.6) — corrigido na Sprint 04 com critério "
+        "explícito na rubrica e no prompt do juiz; re-medições finalizadas "
+        "com 0 erros do avaliador nas duas iterações.",
+        "O juiz e o gerador são o mesmo modelo (gpt-oss:120b), o que pode "
+        "introduzir viés do avaliador. Mitigação parcial: critérios "
+        "explícitos na rubrica e decisões principalmente determinísticas — "
+        "próximo passo é avaliar com um juiz de família de modelo diferente.",
     ]),
 
     Spacer(1, 6),

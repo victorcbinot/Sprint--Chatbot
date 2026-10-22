@@ -62,11 +62,12 @@ Configuração constante: `k=4`, `chunk_size=500`, `gpt-oss:120b`,
 Comparação detalhada caso a caso: `evals/comparacao_iter1_vs_iter2.md`
 (gerada por `python evals/analisar_interacao.py 1 2 --salvar-comparacao`).
 
-Nota de rastreabilidade: os números das colunas "índice corrigido" foram
-re-medidos com o `prompt_rag_v2.md` **final** (com a proteção contra
-injection) e o juiz atualizado (problema 5) — resultados idênticos ao
-anterior, o que reforça que os artifacts oficiais correspondem ao prompt
-entregue.
+Nota de rastreabilidade: a iteração 1 foi reexecutada (2026-10-22) com o
+medidor atual e o mesmo juiz, prompt e parâmetros da iteração 2 — os números
+das colunas "índice corrigido" foram medidos com o `prompt_rag_v2.md` **final**
+(com a proteção contra injection) e o juiz atualizado (problema 5) nos dois
+lados, garantindo comparação justa. Resultados idênticos ao anterior, o que
+reforça que os artifacts oficiais correspondem ao prompt entregue.
 
 ## 5. Problemas encontrados e soluções
 
@@ -167,6 +168,10 @@ Limitações e próximos passos:
   no retrieval, multihop mais exigente).
 - Cada pergunta é respondida de forma independente (sem memória no RAG).
 - Embeddings dependem do Ollama local rodando na máquina.
+- O juiz e o gerador são o mesmo modelo (`gpt-oss:120b`), o que pode
+  introduzir viés do avaliador. Mitigação parcial: critérios explícitos na
+  rubrica e decisões majoritariamente determinísticas; próximo passo é
+  avaliar com um juiz de família de modelo diferente.
 
 ## 7. Experimento: set difícil para diferenciar prompts
 

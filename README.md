@@ -100,7 +100,7 @@ Profissional responsável pela operação diária de estações de carregamento 
 ## FUNCIONALIDADES ADICIONADAS NA SPRINT 4:
 
 - Pipeline RAG completo: carregamento de PDFs → chunking semântico → embeddings locais (`nomic-embed-text` via Ollama) → ChromaDB persistente
-- Base de conhecimento oficial em PDFs na pasta `data/knowledge_base/` (4 documentos)
+- Base de conhecimento simulada em PDFs na pasta `data/knowledge_base/` (4 documentos fictícios, gerados por `gerar_knowledge_base.py`)
 - Retriever configurável (top-k) com rastreamento das fontes recuperadas
 - Prompt de RAG versionado (`prompt_rag_v1.md`, `prompt_rag_v2.md`) com instruções de citação e recusa
 - Pipeline integrado aos guardrails de segurança da Sprint 3 (injection no documento e fora de escopo bloqueados)
@@ -119,12 +119,14 @@ Sprint--Chatbot/
 │
 ├── chatbot.py              # versão legado (Sprint 2), funcional
 ├── chatbot_lcel.py         # Sprint 3 (chain LangChain), funcional
-├── app.py                  # Sprint 4 (interface Streamlit do RAG)
-├── indexar_base_de_conhecimento.py  # Sprint 4 (indexa os PDFs no ChromaDB)
+├── gerar_knowledge_base.py # Sprint 4 (gera os PDFs da base simulada)
 ├── requirements.txt
 ├── README.md
 ├── .env.example
 ├── .gitignore
+│
+├── app/                    # Sprint 4
+│   └── app.py              # interface Streamlit do RAG
 │
 ├── prompts/                # Sprint 3 + Sprint 4
 │   ├── system_prompt_v1.md
@@ -139,24 +141,23 @@ Sprint--Chatbot/
 │   │   └── consulta_recarga.py
 │   ├── guardrails/
 │   │   ├── scope_validator.py
-│   │   └── moderacao.py
+│   │   └── moderation.py
 │   ├── chain/
 │   │   ├── memoria.py
 │   │   └── builder.py
 │   └── rag/                # Sprint 4
 │       ├── loader.py
-│       ├── chunker.py
+│       ├── chunking.py
 │       ├── embeddings.py
 │       ├── vector_store.py
 │       ├── retriever.py
-│       ├── prompt.py
+│       ├── prompt_rag.py
+│       ├── indexar_base_de_conhecimento.py  # indexa os PDFs no ChromaDB
+│       ├── testar_pipeline_rag.py
 │       └── pipeline.py
 │
-├── app/                    # Sprint 4
-│   └── app.py
-│
 ├── data/
-│   ├── knowledge_base/     # Sprint 4 (PDFs oficiais da base)
+│   ├── knowledge_base/     # Sprint 4 (PDFs simulados da base)
 │   └── chroma_db/          # Sprint 4 (índice persistente, não versionado)
 │
 ├── evals/                  # Sprint 3 + Sprint 4
@@ -166,17 +167,21 @@ Sprint--Chatbot/
 │   ├── comparar_modelos.py
 │   ├── rag_eval_set.json
 │   ├── run_rag_evals.py
+│   ├── judge_prompt_rag.md           # prompt do LLM-as-judge
+│   ├── rubrica_rag.md                # critérios de avaliação do juiz
 │   ├── rag_results_iter1.json
 │   ├── rag_results_iter2.json
 │   ├── comparacao_iter1_vs_iter2.json
-│   ├── rag_eval_set_dificil.json      # experimento: casos difíceis p/ diferenciar prompts
+│   ├── comparacao_iter1_vs_iter2.md
+│   ├── rag_eval_set_dificil.json     # experimento: casos difíceis p/ diferenciar prompts
 │   ├── rag_results_iter3.json
 │   ├── rag_results_iter4.json
+│   ├── rag_results_iter5.json
 │   ├── comparar_modelos_rag.py
 │   └── analisar_interacao.py
 │
 └── docs/
-    ├── ChargeGrid.draw.io.png
+    ├── ChargeGrid.drawio.png
     ├── modelo_teste.md
     ├── system_prompt.md
     ├── testes.md
@@ -184,6 +189,7 @@ Sprint--Chatbot/
     ├── comparacao_modelos_raw.json    # Sprint 3
     ├── comparacao_modelos_rag_raw.json # Sprint 4
     ├── relatorio_rag.md               # Sprint 4
+    ├── gerar_relatorio_evolucao.py    # gera o PDF de evolução
     └── relatorio_evolucao.pdf         # atualizado na Sprint 4
 ```
 
@@ -207,47 +213,57 @@ OLLAMA_API_KEY=sua_chave_aqui
 
 pela chave válida da API utilizada.
 
-### 3. Executar o chatbot
+### 3. Baixar o modelo de embeddings local (Ollama)
 
-O projeto tem duas versões executáveis: a versão original da Sprint 2 (loop de terminal simples) e a versão refatorada da Sprint 03 (chain LangChain). Escolha uma das duas opções abaixo.
+Os embeddings do RAG rodam no Ollama local (a API do Ollama Cloud não expõe embeddings). Com o Ollama instalado e rodando:
 
-#### 3a. Versão Sprint 2 (legado, chatbot em loop de terminal)
+```bash
+ollama pull nomic-embed-text
+```
+
+### 4. Indexar a base de conhecimento no ChromaDB
+
+Obrigatório antes de abrir a interface (Sprint 04) e de rodar os evals de RAG — sem o índice, o vector store fica vazio e o pipeline falha:
+
+```bash
+python src/rag/indexar_base_de_conhecimento.py
+```
+
+### 5. Executar o chatbot
+
+O projeto tem três versões executáveis: a versão original da Sprint 2 (loop de terminal simples), a versão refatorada da Sprint 03 (chain LangChain) e a versão da Sprint 04 (RAG com interface web). Escolha uma das três opções abaixo.
+
+#### 5a. Versão Sprint 2 (legado, chatbot em loop de terminal)
 
 ```bash
 python chatbot.py
 ```
 
-#### 3b. Versão Sprint 03 (chain LangChain)
+#### 5b. Versão Sprint 03 (chain LangChain)
 
 ```python
 python chatbot_lcel.py
 ```
 
-#### 3c. Versão Sprint 04 (RAG com interface web)
+#### 5c. Versão Sprint 04 (RAG com interface web) — requer os passos 2, 3 e 4 antes
 
 ```python
 streamlit run app/app.py
 ```
 
-### 4. Rodar o eval set (Sprint 3)
+### 6. Rodar o eval set (Sprint 3)
 
 ```bash
 python evals/run_evals.py
 ```
 
-### 5. Rodar a comparação de modelos (Sprint 3)
+### 7. Rodar a comparação de modelos (Sprint 3)
 
 ```bash
 python evals/comparar_modelos.py
 ```
 
-### 6. Indexar a base de conhecimento no ChromaDB (Sprint 4)
-
-```bash
-python indexar_base_de_conhecimento.py
-```
-
-### 7. Rodar o eval set de RAG (Sprint 4)
+### 8. Rodar o eval set de RAG (Sprint 4)
 
 ```bash
 # iteração 1 (prompt v1)
@@ -269,7 +285,7 @@ python evals/run_rag_evals.py --iteracao 5 --prompt v2 --eval-set rag_eval_set_d
 python evals/analisar_interacao.py 4 5
 ```
 
-### 8. Rodar a comparação entre modelos no RAG (Sprint 4)
+### 9. Rodar a comparação entre modelos no RAG (Sprint 4)
 
 ```bash
 python evals/comparar_modelos_rag.py
